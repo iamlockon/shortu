@@ -1,0 +1,44 @@
+version: "3.7"
+
+networks:
+    app:
+        driver: bridge
+
+services:
+    shortu:
+        build: .
+        secrets:
+            - source: secret_file
+              target: DB_PASSWD
+        depends_on:
+            - db
+            - cache
+        networks:
+            - app
+    db:
+        image: postgres
+        restart: always
+        secrets:
+            - source: secret_file
+              target: DB_PASSWD
+        volumes:
+            - db-data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_DB=shortu
+            - POSTGRES_PASSWORD_FILE=/run/secrets/DB_PASSWD
+        networks:
+            - app
+    cache:
+        image: 'bitnami/redis:latest'
+        restart: always
+        environment:
+            - ALLOW_EMPTY_PASSWORD=yes
+        ports:
+            - '6379'
+        networks:
+            - app
+volumes:
+    db-data:
+secrets:
+    secret_file:
+        file: conf/dev.secrets.env

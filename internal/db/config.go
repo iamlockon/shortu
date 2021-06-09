@@ -22,3 +22,7 @@ func NewConfig() *MongoConfig {
 func (c *MongoConfig) GetConnStr() string {
 	return fmt.Sprintf("mongodb://%s:%s", c.Host, c.Port)
 }
+
+func (c *MongoConfig) GetTimeout() int {
+	return c.Timeout
+}

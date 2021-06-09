@@ -14,6 +14,7 @@ type RedisConfig struct {
 	Host     string
 	Port     string
 	Db       string
+	Timeout  int
 }
 
 var _ CacheClient = (*RedisClient)(nil)
