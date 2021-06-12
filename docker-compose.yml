@@ -16,7 +16,7 @@ services:
         networks:
             - app
     db:
-        image: postgres
+        image: postgres:13-3-alpine
         restart: always
         secrets:
             - source: secret_file
@@ -25,6 +25,7 @@ services:
             - db-data:/var/lib/postgresql/data
         environment:
             - POSTGRES_DB=shortu
+            - POSTGRES_USER=pg
             - POSTGRES_PASSWORD_FILE=/run/secrets/DB_PASSWD
         networks:
             - app

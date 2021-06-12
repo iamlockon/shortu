@@ -1,24 +1,28 @@
 package cache
 
 import (
+	"context"
+	"time"
+
 	"github.com/go-redis/redis/v8"
 )
 
 type CacheClient interface {
-	GetText(key string) string
+	GetText(ctx context.Context, key string) string
 }
 
 type RedisConfig struct {
-	User     string
-	Password string
-	Host     string
-	Port     string
-	Db       string
-	Timeout  int
+	user     string
+	password string
+	host     string
+	port     string
+	db       string
+	timeout  int
 }
 
 var _ CacheClient = (*RedisClient)(nil)
 
 type RedisClient struct {
-	client *redis.Client
+	client  *redis.Client
+	timeout time.Duration
 }

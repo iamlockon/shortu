@@ -1,21 +1,28 @@
 package db
 
-import "go.mongodb.org/mongo-driver/mongo"
+import (
+	"context"
+	"time"
 
-type DbClient interface {
+	errors "github.com/iamlockon/shortu/internal/errors"
+	pg "github.com/jackc/pgx/v4/pgxpool"
+)
+
+type DBClient interface {
+	GetConn(context.Context) (*pg.Conn, *errors.Error)
 }
 
-type MongoConfig struct {
-	User     string
-	Password string
-	Host     string
-	Port     string
-	Db       string
-	Timeout  int
+type PgConfig struct {
+	user     string
+	password string
+	host     string
+	db       string
+	timeout  int
 }
 
-var _ DbClient = (*MongoClient)(nil)
+var _ DBClient = (*PgClient)(nil)
 
-type MongoClient struct {
-	client *mongo.Client
+type PgClient struct {
+	pool    *pg.Pool
+	timeout time.Duration
 }

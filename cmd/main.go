@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/iamlockon/shortu/web/api"
+	web "github.com/iamlockon/shortu/web/api"
 	_ "github.com/joho/godotenv/autoload"
 )
 

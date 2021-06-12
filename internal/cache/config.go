@@ -2,6 +2,7 @@ package cache
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/iamlockon/shortu/internal/env"
 )
@@ -10,20 +11,20 @@ import (
 func NewConfig() *RedisConfig {
 
 	return &RedisConfig{
-		User:     env.MustGetString("RedisUser", ""),
-		Password: env.MustGetString("RedisPassword", ""),
-		Host:     env.MustGetString("RedisHost", "localhost"),
-		Port:     env.MustGetString("RedisPort", "6379"),
-		Db:       env.MustGetString("RedisDb", "0"),
-		Timeout:  env.MustGetInt("RedisTimeout", 10),
+		user:     env.MustGetString("RedisUser", ""),
+		password: env.MustGetString("RedisPassword", ""),
+		host:     env.MustGetString("RedisHost", "localhost"),
+		port:     env.MustGetString("RedisPort", "6379"),
+		db:       env.MustGetString("RedisDb", "0"),
+		timeout:  env.MustGetInt("RedisTimeout", 10),
 	}
 }
 
 // GetConnStr returns connection string
 func (c *RedisConfig) GetConnStr() string {
-	return fmt.Sprintf("redis://%s:%s@%s:%s/%s", c.User, c.Password, c.Host, c.Port, c.Db)
+	return fmt.Sprintf("redis://%s:%s@%s:%s/%s", c.user, c.password, c.host, c.port, c.db)
 }
 
-func (c *RedisConfig) GetTimeout() int {
-	return c.Timeout
+func (c *RedisConfig) GetTimeout() time.Duration {
+	return time.Duration(c.timeout)
 }

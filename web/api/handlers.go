@@ -4,28 +4,33 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/iamlockon/shortu/internal/cache"
 	"github.com/iamlockon/shortu/internal/db"
+
+	"net/http"
 )
 
-type ApiController struct {
+type APIController struct {
 	cache cache.CacheClient
-	db    db.DbClient
+	db    db.DBClient
 }
 
-func NewApiController(c cache.CacheClient, d db.DbClient) *ApiController {
-	return &ApiController{
+func NewAPIController(c cache.CacheClient, d db.DBClient) *APIController {
+	return &APIController{
 		cache: c,
 		db:    d,
 	}
 }
 
-func (ctrl *ApiController) getURLHandler(c *gin.Context) {
-
+func (ctrl *APIController) getURLHandler(c *gin.Context) {
+	c.String(http.StatusOK, "getURL")
 }
 
-func (ctrl *ApiController) setURLHandler(c *gin.Context) {
-
+func (ctrl *APIController) setURLHandler(c *gin.Context) {
+	res := SetURLRes{
+		Res: "Xrf2",
+	}
+	c.JSON(http.StatusOK, res)
 }
 
-func (ctrl *ApiController) deleteURLHandler(c *gin.Context) {
-
+func (ctrl *APIController) deleteURLHandler(c *gin.Context) {
+	c.String(http.StatusOK, "")
 }

@@ -1,4 +1,4 @@
-package error
+package errors
 
 type Error struct {
 	Code int
@@ -6,5 +6,9 @@ type Error struct {
 }
 
 const (
+	// Config error
 	InvalidConfigError = iota + 1000
+
+	// Database error
+	FailedToGetDBConnError = iota + 10000
 )
