@@ -10,11 +10,11 @@ import (
 // NewConfig create PgConfig from environment variables
 func NewConfig() *PgConfig {
 	return &PgConfig{
-		user:     env.MustGetString("PgUser", "pg"),
-		password: env.MustGetString("PgPassword", "123456"),
-		host:     env.MustGetString("PgHost", "db"),
-		db:       env.MustGetString("PgDb", "shortu"),
-		timeout:  env.MustGetInt("PgTimeout", 10),
+		user:     env.MustGetString("PG_USER", "pg"),
+		password: env.MustGetString("PG_PASSWORD", "123456"),
+		host:     env.MustGetString("PG_HOST", "db"),
+		db:       env.MustGetString("PG_DB", "shortu"),
+		timeout:  env.MustGetInt("PG_TIMEOUT", 10),
 	}
 }
 
@@ -25,5 +25,5 @@ func (c *PgConfig) GetConnStr() string {
 }
 
 func (c *PgConfig) GetTimeout() time.Duration {
-	return time.Duration(c.timeout)
+	return time.Duration(c.timeout) * time.Second
 }

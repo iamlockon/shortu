@@ -7,26 +7,30 @@ networks:
 services:
     shortu:
         build: .
-        secrets:
-            - source: secret_file
-              target: DB_PASSWD
+        environment:
+            - PG_USER=${PG_USER}
+            - PG_HOST=${PG_HOST}
+            - PG_DB=${PG_DB}
+            - PG_TIMEOUT=${PG_TIMEOUT}
+            - PG_PASSWORD=${PG_PASSWORD}
         depends_on:
             - db
             - cache
         networks:
             - app
+        command:
+            sh -c '/app/wait_for.sh db:5432 -t 10 -- /app/wait_for.sh cache:6379 -t 10 -- /app/tern migrate -c /app/tern.conf --migrations /app/sqls && /app/main'
     db:
-        image: postgres:13-3-alpine
+        image: postgres:11.12-alpine
         restart: always
-        secrets:
-            - source: secret_file
-              target: DB_PASSWD
-        volumes:
-            - db-data:/var/lib/postgresql/data
+        # volumes:
+        #     - db-data:/var/lib/postgresql/data
         environment:
-            - POSTGRES_DB=shortu
-            - POSTGRES_USER=pg
-            - POSTGRES_PASSWORD_FILE=/run/secrets/DB_PASSWD
+            - POSTGRES_DB=${PG_DB}
+            - POSTGRES_USER=${PG_USER}
+            - POSTGRES_PASSWORD=${PG_PASSWORD}
+        ports:
+            - "5432:5432"
         networks:
             - app
     cache:
@@ -40,6 +44,3 @@ services:
             - app
 volumes:
     db-data:
-secrets:
-    secret_file:
-        file: conf/dev.secrets.env

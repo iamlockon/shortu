@@ -1,4 +1,5 @@
-#!bin/sh
+#!bin/bash
+# usage: ./gen_mock.sh
 set -ex
 
 mockgen -source internal/cache/model.go -package mock -destination mock/cache_mock.go

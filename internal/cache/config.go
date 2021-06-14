@@ -26,5 +26,5 @@ func (c *RedisConfig) GetConnStr() string {
 }
 
 func (c *RedisConfig) GetTimeout() time.Duration {
-	return time.Duration(c.timeout)
+	return time.Duration(c.timeout) * time.Second
 }

@@ -3,12 +3,14 @@ package cache
 import (
 	"context"
 	"time"
-
+	"github.com/iamlockon/shortu/internal/errors"
 	"github.com/go-redis/redis/v8"
 )
 
 type CacheClient interface {
 	GetText(ctx context.Context, key string) string
+	SetText(ctx context.Context, key, val string, expiry time.Duration) *errors.Error
+	Close() error
 }
 
 type RedisConfig struct {

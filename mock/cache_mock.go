@@ -7,8 +7,10 @@ package mock
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	gomock "github.com/golang/mock/gomock"
+	errors "github.com/iamlockon/shortu/internal/errors"
 )
 
 // MockCacheClient is a mock of CacheClient interface.
@@ -34,6 +36,20 @@ func (m *MockCacheClient) EXPECT() *MockCacheClientMockRecorder {
 	return m.recorder
 }
 
+// Close mocks base method.
+func (m *MockCacheClient) Close() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Close")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Close indicates an expected call of Close.
+func (mr *MockCacheClientMockRecorder) Close() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockCacheClient)(nil).Close))
+}
+
 // GetText mocks base method.
 func (m *MockCacheClient) GetText(ctx context.Context, key string) string {
 	m.ctrl.T.Helper()
@@ -46,4 +62,18 @@ func (m *MockCacheClient) GetText(ctx context.Context, key string) string {
 func (mr *MockCacheClientMockRecorder) GetText(ctx, key interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetText", reflect.TypeOf((*MockCacheClient)(nil).GetText), ctx, key)
+}
+
+// SetText mocks base method.
+func (m *MockCacheClient) SetText(ctx context.Context, key, val string, expiry time.Duration) *errors.Error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetText", ctx, key, val, expiry)
+	ret0, _ := ret[0].(*errors.Error)
+	return ret0
+}
+
+// SetText indicates an expected call of SetText.
+func (mr *MockCacheClientMockRecorder) SetText(ctx, key, val, expiry interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetText", reflect.TypeOf((*MockCacheClient)(nil).SetText), ctx, key, val, expiry)
 }

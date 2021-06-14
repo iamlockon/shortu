@@ -3,6 +3,7 @@ package cache
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/iamlockon/shortu/internal/config"
@@ -22,6 +23,10 @@ func New(cfg config.StorageConfig) (*RedisClient, *errors.Error) {
 	}, nil
 }
 
+func (c *RedisClient) Close() error {
+	return c.client.Close()
+}
+
 func (c *RedisClient) GetText(ctx context.Context, key string) string {
 	rCtx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
@@ -30,4 +35,13 @@ func (c *RedisClient) GetText(ctx context.Context, key string) string {
 		return ""
 	}
 	return s
+}
+
+func (c *RedisClient) SetText(ctx context.Context, key, val string, exp time.Duration) *errors.Error {
+	rCtx, cancel := context.WithTimeout(ctx, c.timeout)
+	defer cancel()
+	if err := c.client.Set(rCtx, key, val, exp).Err(); err != nil {
+		return errors.New(errors.CacheSetTextFailedError, err.Error())
+	}
+	return nil
 }

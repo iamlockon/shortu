@@ -11,4 +11,13 @@ const (
 
 	// Database error
 	FailedToGetDBConnError = iota + 10000
+	QueryRowError
+	QueryError
+	ExecSQLError
+	ZeroAffectedSQLError
+	URLNotFoundError
+	ScanError
+	RowsError
+	// Cache error
+	CacheSetTextFailedError = iota + 20000
 )
