@@ -13,9 +13,8 @@ import (
 	filter "github.com/seiflotfy/cuckoofilter"
 )
 
-func setupRouter(ca cache.CacheClient, d db.DBClient, cfg *config.Config) *gin.Engine {
+func setupRouter(ca cache.CacheClient, d db.DBClient, cfg *config.Config, f *filter.Filter) *gin.Engine {
 	router := gin.Default()
-	f := filter.NewFilter(cfg.FilterCap)
 	// warm up filter, this is a blocking op
 	fmt.Println(">>>> begin to warm up filter")
 	startLoadTime := time.Now()
@@ -40,19 +39,19 @@ func setupRouter(ca cache.CacheClient, d db.DBClient, cfg *config.Config) *gin.E
 func Run() {
 	cfg := config.New(cache.NewConfig(), db.NewConfig())
 	ca, err := cache.New(cfg.Cache)
-	defer ca.Close()
 	if err != nil {
 		fmt.Println("failed to new cache: ", err)
 		panic(err)
 	}
+	defer ca.Close()
 	d, err := db.New(cfg.DB)
-	defer d.Close()
 	if err != nil {
 		fmt.Println("failed to new db: ", err)
 		panic(err)
 	}
-
-	router := setupRouter(ca, d, cfg)
+	defer d.Close()
+	f := filter.NewFilter(cfg.FilterCap)
+	router := setupRouter(ca, d, cfg, f)
 	if err := router.Run(fmt.Sprintf("%s:%s", cfg.SrvHost, cfg.SrvPort)); err != nil {
 		panic(err)
 	}

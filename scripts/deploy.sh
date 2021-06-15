@@ -21,5 +21,13 @@ fi
 echo "env | grep PG:"
 env | grep PG
 
-docker-compose build
-docker-compose up --force-recreate
+# docker-compose build
+# docker-compose up -d
+
+if [ -n "$RUN_E2E" ]
+then
+  echo ">>>>> Run e2e"
+  go run e2e/e2e.go
+  echo "<<<<< e2e finished..."
+fi
+

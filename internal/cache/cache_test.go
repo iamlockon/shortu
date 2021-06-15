@@ -57,7 +57,7 @@ func TestSetText_OK(t *testing.T) {
 	c, _ := New(NewConfig())
 	rc, m := redismock.NewClientMock()
 	c.client = rc
-	m.ExpectSet(key, val, exp)
+	m.ExpectSet(key, val, exp).SetVal("OK")
 	ctx := context.Background()
 	assert.Nil(t, c.SetText(ctx, key, val, exp))
 }

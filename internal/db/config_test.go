@@ -22,8 +22,8 @@ func TestGetConnStr(t *testing.T) {
 }
 
 func TestGetTimeout(t *testing.T) {
-	rc := NewConfig()
+	dc := NewConfig()
 	timeout := 10
-	rc.timeout = timeout
-	assert.Equal(t, time.Duration(timeout), rc.GetTimeout())
+	dc.timeout = timeout
+	assert.Equal(t, time.Duration(timeout)*time.Second, dc.GetTimeout())
 }

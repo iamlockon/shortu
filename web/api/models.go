@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	expiredDateLayout = "2006-01-02T15:04:05.000Z"
+	ExpiredDateLayout = "2006-01-02T15:04:05.000Z"
 )
 
 type uploadURLRes struct {
@@ -20,14 +20,14 @@ type uploadURLRes struct {
 
 type uploadURLReq struct {
 	URL       string    `json:"url" binding:"url,required"`
-	ExpiredAt time.Time `json:"expired_at" binding:"required"`
+	ExpiredAt time.Time `json:"expireAt" binding:"required"`
 }
 
-type deleteURLUri struct {
+type deleteURLReq struct {
 	ID string `uri:"id" binding:"max=10,required"`
 }
 
-type redirectURLUri struct {
+type redirectURLReq struct {
 	ID string `uri:"id" binding:"max=10,required"`
 }
 

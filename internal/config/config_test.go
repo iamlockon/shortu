@@ -23,10 +23,10 @@ func TestNew_SetEnv(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ca, db := mock.NewMockStorageConfig(ctrl), mock.NewMockStorageConfig(ctrl)
 	host, port := "0.0.0.0", "2345"
-	if err := os.Setenv("SrvHost", host); err != nil {
+	if err := os.Setenv("SRV_HOST", host); err != nil {
 		t.Fail()
 	}
-	if err := os.Setenv("SrvPort", port); err != nil {
+	if err := os.Setenv("SRV_PORT", port); err != nil {
 		t.Fail()
 	}
 	rc := New(ca, db)

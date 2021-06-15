@@ -118,6 +118,9 @@ linters:
   # - wsl
 
 issues:
+  exclude:
+    # staticcheck
+    - "ST1003: should not use ALL_CAPS in Go names; use CamelCase instead"
   # Excluding configuration per-path, per-linter, per-text and per-source
   exclude-rules:
     - path: _test\.go

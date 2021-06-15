@@ -14,6 +14,8 @@ const (
 	QueryRowError
 	QueryError
 	ExecSQLError
+	BeginError
+	CommitError
 	ZeroAffectedSQLError
 	URLNotFoundError
 	ScanError

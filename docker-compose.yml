@@ -13,11 +13,16 @@ services:
             - PG_DB=${PG_DB}
             - PG_TIMEOUT=${PG_TIMEOUT}
             - PG_PASSWORD=${PG_PASSWORD}
+            - SRV_HOST=${SRV_HOST}
+            - SRV_PORT=${SRV_PORT}
+            - REDIS_HOST=${REDIS_HOST}
         depends_on:
             - db
             - cache
         networks:
             - app
+        ports:
+            - '8080:8080'
         command:
             sh -c '/app/wait_for.sh db:5432 -t 10 -- /app/wait_for.sh cache:6379 -t 10 -- /app/tern migrate -c /app/tern.conf --migrations /app/sqls && /app/main'
     db:
@@ -39,7 +44,7 @@ services:
         environment:
             - ALLOW_EMPTY_PASSWORD=yes
         ports:
-            - '6379'
+            - '6379:6379'
         networks:
             - app
 volumes:

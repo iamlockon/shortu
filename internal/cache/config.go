@@ -11,12 +11,12 @@ import (
 func NewConfig() *RedisConfig {
 
 	return &RedisConfig{
-		user:     env.MustGetString("RedisUser", ""),
-		password: env.MustGetString("RedisPassword", ""),
-		host:     env.MustGetString("RedisHost", "localhost"),
-		port:     env.MustGetString("RedisPort", "6379"),
-		db:       env.MustGetString("RedisDb", "0"),
-		timeout:  env.MustGetInt("RedisTimeout", 10),
+		user:     env.MustGetString("REDIS_USER", ""),
+		password: env.MustGetString("REDIS_PASSWORD", ""),
+		host:     env.MustGetString("REDIS_HOST", "localhost"),
+		port:     env.MustGetString("REDIS_PORT", "6379"),
+		db:       env.MustGetString("REDIS_DB", "0"),
+		timeout:  env.MustGetInt("REDIS_TIMEOUT", 10),
 	}
 }
 

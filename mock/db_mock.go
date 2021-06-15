@@ -7,6 +7,7 @@ package mock
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	gomock "github.com/golang/mock/gomock"
 	errors "github.com/iamlockon/shortu/internal/errors"
@@ -36,6 +37,35 @@ func NewMockDBClient(ctrl *gomock.Controller) *MockDBClient {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockDBClient) EXPECT() *MockDBClientMockRecorder {
 	return m.recorder
+}
+
+// Begin mocks base method.
+func (m *MockDBClient) Begin(ctx context.Context) (pgx.Tx, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Begin", ctx)
+	ret0, _ := ret[0].(pgx.Tx)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Begin indicates an expected call of Begin.
+func (mr *MockDBClientMockRecorder) Begin(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Begin", reflect.TypeOf((*MockDBClient)(nil).Begin), ctx)
+}
+
+// DeleteURL mocks base method.
+func (m *MockDBClient) DeleteURL(c context.Context, shorten string) *errors.Error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteURL", c, shorten)
+	ret0, _ := ret[0].(*errors.Error)
+	return ret0
+}
+
+// DeleteURL indicates an expected call of DeleteURL.
+func (mr *MockDBClientMockRecorder) DeleteURL(c, shorten interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteURL", reflect.TypeOf((*MockDBClient)(nil).DeleteURL), c, shorten)
 }
 
 // Exec mocks base method.
@@ -106,7 +136,7 @@ func (mr *MockDBClientMockRecorder) QueryRow(ctx, sql interface{}, args ...inter
 }
 
 // UploadURL mocks base method.
-func (m *MockDBClient) UploadURL(c context.Context, url string, expiredAt int64, f *cuckoo.Filter) (string, *errors.Error) {
+func (m *MockDBClient) UploadURL(c context.Context, url string, expiredAt time.Time, f *cuckoo.Filter) (string, *errors.Error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UploadURL", c, url, expiredAt, f)
 	ret0, _ := ret[0].(string)
@@ -141,6 +171,21 @@ func NewMockPgxIface(ctrl *gomock.Controller) *MockPgxIface {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockPgxIface) EXPECT() *MockPgxIfaceMockRecorder {
 	return m.recorder
+}
+
+// Begin mocks base method.
+func (m *MockPgxIface) Begin(ctx context.Context) (pgx.Tx, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Begin", ctx)
+	ret0, _ := ret[0].(pgx.Tx)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Begin indicates an expected call of Begin.
+func (mr *MockPgxIfaceMockRecorder) Begin(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Begin", reflect.TypeOf((*MockPgxIface)(nil).Begin), ctx)
 }
 
 // Close mocks base method.

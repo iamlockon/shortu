@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	cacheValidFor24H = 24 * time.Second
+	cacheValidFor24H = 24 * time.Hour
 )
 
 func NewAPIController(c cache.CacheClient, d db.DBClient, cfg *config.Config, f *filter.Filter) *APIController {
@@ -29,10 +29,11 @@ func NewAPIController(c cache.CacheClient, d db.DBClient, cfg *config.Config, f 
 
 // redirectURLHandler redirects to original URL
 func (ctrl *APIController) redirectURLHandler(c *gin.Context) {
-	var uri redirectURLUri
+	var uri redirectURLReq
 	if err := c.ShouldBindUri(&uri); err != nil {
 		fmt.Println("failed to bind uri :", err.Error())
 		c.Status(http.StatusBadRequest)
+		return
 	}
 	// test invalid ID
 	if !checkValidID(uri.ID) {
@@ -41,15 +42,16 @@ func (ctrl *APIController) redirectURLHandler(c *gin.Context) {
 		return
 	}
 	// test against bloom filter
-	if !checkBloom(uri.ID, ctrl.filter) {
+	if !checkCuckoo(uri.ID, ctrl.filter) {
 		fmt.Println("requested ID does not exist")
-		c.Status(http.StatusBadRequest)
+		c.Status(http.StatusNotFound)
 		return
 	}
 	// try cache
 	original := ctrl.cache.GetText(c.Request.Context(), uri.ID)
 	// query db
 	if original == "" {
+		fmt.Println("[DEBUG] cache miss")
 		var err *errors.Error
 		if original, err = ctrl.db.GetURL(c.Request.Context(), uri.ID); err != nil {
 			if err.Code == errors.URLNotFoundError { // expired, deleted, not exists all go here
@@ -93,12 +95,12 @@ func (ctrl *APIController) uploadURLHandler(c *gin.Context) {
 		c.String(http.StatusBadRequest, fmt.Sprintf("invalid expired date: %s", req.ExpiredAt))
 		return
 	}
-	shorten, err := ctrl.db.UploadURL(c.Request.Context(), req.URL, req.ExpiredAt.UTC().Unix(), ctrl.filter)
+	shorten, err := ctrl.db.UploadURL(c.Request.Context(), req.URL, req.ExpiredAt.UTC(), ctrl.filter)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Msg)
 		return
 	}
-	// cache it
+	// cache it for 24H no mattter what the expired date is
 	if err := ctrl.cache.SetText(c.Request.Context(), shorten, req.URL, cacheValidFor24H); err != nil {
 		fmt.Println("set text cache failed: ", err.Msg)
 	}
@@ -109,7 +111,30 @@ func (ctrl *APIController) uploadURLHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-// deleteURLHandler removes one entity if it exists, otherwise do nothing
+// deleteURLHandler removes one entity (by set expired_at to past time) if it exists, otherwise do nothing
 func (ctrl *APIController) deleteURLHandler(c *gin.Context) {
+	var uri deleteURLReq
+	if err := c.ShouldBindUri(&uri); err != nil {
+		fmt.Println("failed to bind uri :", err.Error())
+		c.Status(http.StatusBadRequest)
+		return
+	}
+	// test invalid ID
+	if !checkValidID(uri.ID) {
+		fmt.Println("requested ID is invalid")
+		c.Status(http.StatusBadRequest)
+		return
+	}
+	// test against bloom filter
+	if !checkCuckoo(uri.ID, ctrl.filter) {
+		fmt.Println("requested ID does not exist")
+		c.Status(http.StatusNotFound)
+		return
+	}
+	if err := ctrl.db.DeleteURL(c.Request.Context(), uri.ID); err != nil {
+		fmt.Println("delete url failed :", err.Msg)
+		c.Status(http.StatusInternalServerError)
+		return
+	}
 	c.Status(http.StatusOK)
 }

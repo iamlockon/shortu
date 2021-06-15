@@ -26,5 +26,5 @@ func TestGetTimeout(t *testing.T) {
 	rc := NewConfig()
 	timeout := 10
 	rc.timeout = timeout
-	assert.Equal(t, time.Duration(timeout), rc.GetTimeout())
+	assert.Equal(t, time.Second*time.Duration(timeout), rc.GetTimeout())
 }

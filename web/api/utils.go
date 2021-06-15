@@ -3,6 +3,7 @@ package web
 import (
 	"regexp"
 	"time"
+
 	filter "github.com/seiflotfy/cuckoofilter"
 )
 
@@ -27,7 +28,7 @@ func checkValidID(id string) bool {
 	return base62Regex.MatchString(id)
 }
 
-// checkBloom checks if the ID is possible
-func checkBloom(id string, f *filter.Filter) bool {
+// checkCuckoo checks if the ID is possible
+func checkCuckoo(id string, f *filter.Filter) bool {
 	return f.Lookup([]byte(id))
 }

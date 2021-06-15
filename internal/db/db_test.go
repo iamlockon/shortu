@@ -64,8 +64,8 @@ func TestQuery_OK(t *testing.T) {
 	var title string
 	cnt := 0
 	for actual.Next() {
-		if err := actual.Scan(&id, &title); err != nil {
-			t.Fatal(err)
+		if errr := actual.Scan(&id, &title); errr != nil {
+			t.Fatal(errr)
 		}
 		assert.Equal(t, ids[cnt], id)
 		assert.Equal(t, titles[cnt], title)
