@@ -2,31 +2,41 @@
 
 Shortu is a simple url shortener written in Go :)
 
-## Local Development Prerequisite
+### Local Development Prerequisite
 
 - docker, docker-compose
 
-## Usage
+### Usage
 
-1. Create your own secrets file in conf, name it as "<env>.secrets.env", such as "dev.secrets.env". You can refer to `.sample`.
+1. Clone this repo
 
+2. Create your own secrets file in conf, name it as "<env>.secrets.env", such as "dev.secrets.env". You can refer to `.sample`.
 
-2. Run deploy script (if you want to run e2e, provide environment variable `RUN_E2E` with any non empty value)
+3. Run deploy script
 ```bash
-$RUN_E2E=1 ./scripts/deploy.sh <env>
+./scripts/deploy.sh <env>
 ```
 
+### Run tests (Including E2E test)
 
-## DB Migration
+1. (Optional, required if you need to run e2e) Make sure a fresh instance of service is running (Follow [Usage](#usage) to run it)
+
+2. Run tests with (ignore `[env=e2e]` if not to run e2e)
+
+```bash
+$ [env=e2e] go test ./...
+```
+
+### DB Migration
 
 This project uses tern as database schema migration tool.
 
 
-## Mocks
+### Mocks
 
 This project uses `mockgen` to generate some mocks for UT.
 
-## TODO
+### TODOS
 
-- Use connection tool for cache
-- logging
+- better logging
+- support k8s deployment
